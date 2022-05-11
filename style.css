@@ -1,0 +1,157 @@
+body {
+    padding-top: 50px; /* ヘッダーの後ろに要素が隠れないようにするため */
+}
+
+header {
+    width: 100%; /* 幅いっぱいを指定 */
+    height: 50px; /* 高さを50pxに指定 */
+    background: #f2f3f0; /* 背景色にグレーを指定 */
+    padding: 8px 20px; /* ヘッダーに上下左右それぞれ余白を指定 */
+    box-sizing: border-box; /* padding分を含んで幅を100%にするため */
+    position: fixed; /* ウィンドウを基準に画面に固定 */
+    top: 0; /* 上下の固定位置を上から0pxにする */
+    left: 0; /* 左右の固定位置を左から0pxにする */
+    display: flex; /* 中の要素を横並びにする */
+    align-items: center; /* 中の要素を上下中央に並べる */
+}
+main {
+    /* height: 50vw; /*スクロールの演出を見れるようにmainに高さを指定 */
+}
+
+.start_btn {
+    width: 200px;
+    height: 120px;
+    float: left;
+    font-size: 200%;
+    margin: 2px;
+    border: solid;
+    border-color: #d3d2d2;
+    border-radius: 8px;
+    background-color: #eb6100;
+    color: #fff;
+    position: absolute;
+    top: 50vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align:center;
+    line-height:120px;
+    -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+}
+.start_btn:hover {
+    background: #f56500;
+}
+
+#problem_color_box {
+    height:30px;
+    margin: 2px;
+    border: solid;
+    border-color: #000424;
+    border-radius: 8px;
+    text-align:center;
+    line-height:30px;
+}
+
+.alternatives{
+    width: 80px;
+    height: 50px;
+    float: left;
+    margin: 2px;
+    border: solid;
+    border-color: #6f6f6f;
+    border-radius: 8px;
+}
+
+#modal_hazure{
+    width: 120px;
+    height: 50px;
+    position: absolute;
+    background-color: #323232;
+    top: -60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    border-radius: 8px;
+    text-align:center;
+    color: #ffffff;
+}
+
+#hazure_text{
+    margin: 3px;
+}
+
+.hazure_anim {
+    animation: key1 0.9s ease alternate;
+    animation-fill-mode: forwards;
+}
+
+@keyframes key1 {
+    0% {
+      transform: translate(-50%, -60%);
+    }
+    40% {
+      transform: translate(-50%, 70%);
+    }
+    60% {
+      transform: translate(-50%, 70%);
+    }
+    100% {
+      transform: translate(-50%, -60%);
+    }
+}
+
+.point_time_text{
+    margin: 2px;
+    height: 45%;
+}
+
+
+#modal_ac {
+    width: 400px;
+    height: 400px;
+    float: left;
+    font-size: 200%;
+    margin: 2px;
+    border: solid;
+    border-color: #d3d2d2;
+    border-radius: 8px;
+    background-color: #adadade8;
+    color: #fff;
+    position: absolute;
+    top: 50vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align:center;
+    line-height:120px;
+    -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+    visibility: hidden;
+}
+
+.ac_text {
+    font-size: 100%;
+    line-height:100%;
+}
+
+#tw_share {
+    padding: 5px !important;
+    font-size: 90%;
+    font-weight: bold;
+    padding: .8em 1.6em;
+    margin: 0.4em;
+    background-color: #00acee;
+    color: #fff;
+    text-decoration: none;
+    border-style: none;
+    border-radius: 5px;
+}
+
+#tw_share:hover {
+    opacity: 0.6;
+    transition: 1.0s ;
+    color: #fff;
+}

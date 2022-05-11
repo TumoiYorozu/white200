@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="main.js"></script>
+    <title>200色の白から見つけよう！ - White 200</title>
+</head>
+<body>
+    <header>
+        <div id="problem" style="width: 100px;">
+            <p id="p1" class="text_cat">White 200<br>白ど～れだ！</p>
+        </div>
+        <div id="problem_color_box" style="width: 80px;"> #xxxxxx </div>
+
+        <div style="width:calc(100% - 490px);"></div>
+
+        <div style="width: 90px; float: right">
+            <p class="point_time_text" id="time" style="text-align:center">Time<br>00.00</p>
+        </div>
+        <div style="width: 120px; float: right">
+            <p class="point_time_text" id="score">Score:0</p>
+            <p class="point_time_text" id="try">Try: 0</p>
+        </div>
+
+        <div style="width: 80px; height: 100%; float: right">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false" data-hashtags="white_200" data-related="TumoiYorozu">Tweet</a>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+
+        <div id="modal_hazure">
+            <p id="hazure_text">はずれ<br>#xxxxxx</p>
+        </div>
+        <div id="start_btn" class="start_btn" onclick="make_problem(200, 3)">
+        <!-- <div id="start_btn" class="start_btn" onclick="make_problem(3, 3)"> -->
+            スタート！
+        </div>
+        <div id="modal_ac">
+            <p class="ac_text">正解！</p>
+            <p class="ac_text" id="ac_scores">Score:0<br>Try:0<br>Time:0</p>
+            <p class="ac_text" id="ac_tweet" style="font-size: 70%">
+                <a id="tw_share" href="http://twitter.com/share" target="_blank" onClick="window.open(encodeURI(decodeURI(this.href)), 'tweetwindow', 'width=650, height=470, personalbar=0, toolbar=0, scrollbars=1, sizable=1'); return false;">
+                    結果をツイート
+                </a>
+            </p>
+            <p class="ac_text" id="ac_comment">チュートリアル終了！</p>
+            <div class="start_btn" onclick="make_problem(200, 1)" style="font-size: 100%; height: 50px; line-height:50px; top: 85%">
+                本番開始！
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="list">
+        </div>
+    </main>
+</body>
+</html>
