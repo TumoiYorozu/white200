@@ -5,7 +5,7 @@ body {
 header {
     width: 100%; /* 幅いっぱいを指定 */
     height: 50px; /* 高さを50pxに指定 */
-    background: #f2f3f0; /* 背景色にグレーを指定 */
+    background: #fff; /* 背景色にwhiteを指定 */
     padding: 8px 20px; /* ヘッダーに上下左右それぞれ余白を指定 */
     box-sizing: border-box; /* padding分を含んで幅を100%にするため */
     position: fixed; /* ウィンドウを基準に画面に固定 */
@@ -13,6 +13,10 @@ header {
     left: 0; /* 左右の固定位置を左から0pxにする */
     display: flex; /* 中の要素を横並びにする */
     align-items: center; /* 中の要素を上下中央に並べる */
+    border-bottom: solid;
+    border-width: 2px;
+    border-color: #000000;
+    box-shadow: 0 1px 5px 2px rgba(0,0,0,0.15);
 }
 main {
     /* height: 50vw; /*スクロールの演出を見れるようにmainに高さを指定 */
