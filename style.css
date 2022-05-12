@@ -44,11 +44,15 @@ main {
     background: #f56500;
 }
 
+#problem_text {
+    text-align:center;
+}
+
 #problem_color_box {
-    height:30px;
+    height:40px;
     margin: 2px;
     border: solid;
-    border-color: #000424;
+    border-color: #6f6f6f;
     border-radius: 8px;
     text-align:center;
     line-height:30px;

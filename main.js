@@ -130,8 +130,9 @@ function make_problem(num, dif){
     alt.innerHTML=html;
     ac_color = list[Math.floor(Math.random() * num)];
     ac_color_hex = ConvertRGBtoHex(ac_color);
+    const problem_text = document.getElementById('problem_text');
+    problem_text.innerHTML = "この白を探せ！<br>#" + ac_color_hex;
     const problem_color_box = document.getElementById('problem_color_box');
-    problem_color_box.innerHTML = "#" + ac_color_hex;
     problem_color_box.style.setProperty('background-color', "#" + ac_color_hex);
 
     
