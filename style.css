@@ -159,3 +159,7 @@ main {
     transition: 1.0s ;
     color: #fff;
 }
+
+@media screen and (max-width: 500px){
+    .none {display:none}
+}
