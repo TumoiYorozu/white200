@@ -52,7 +52,8 @@ main {
     height:40px;
     margin: 2px;
     border: solid;
-    border-color: #6f6f6f;
+    border-width: 1px;
+    border-color: #aeaeaeae;
     border-radius: 8px;
     text-align:center;
     line-height:30px;
@@ -64,7 +65,8 @@ main {
     float: left;
     margin: 2px;
     border: solid;
-    border-color: #6f6f6f;
+    border-width: 1px;
+    border-color: #aeaeaeae;
     border-radius: 8px;
 }
 
