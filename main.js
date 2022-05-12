@@ -1,4 +1,9 @@
-
+/**
+ * shuffles given array non-destructively
+ * @template T
+ * @param {T[]} param0 array to shuffle; not to be mutated
+ * @returns {T[]} shuffled array
+ */
 const shuffle = ([...array]) => {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -7,144 +12,262 @@ const shuffle = ([...array]) => {
     return array;
 }
 
-function ColorToHex(color) {
-    var hexadecimal = color.toString(16);
-    return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
-}
-function ConvertRGBtoHex(col) {
-    return ColorToHex(col[0]) + ColorToHex(col[1]) + ColorToHex(col[2]);
-}
+class Color {
+    /**
+     * converts number to 2-digit hex. if number is less than 0 or greater than 255, uses mod 256
+     * @param {number} n number to convert to hex
+     * @returns {string} 2-digit hex
+     */
+    static paddedHex(n) {
+        return (n % 0x100).toString(16).padStart(2, '0');
+    }
 
-let ac_color = [-1, -1, -1];
-let ac_color_hex = "";
-let color_step = 0;
-let start_time;
-let try_num   = 0;
-let score_num = 0;
-let enable_submit = 0;
+    /**
+     * creates new color from the hex code; if hex is not valid, returns null
+     * @param {`#${string}`} hex hex color code starting with #
+     * @returns {Color?}
+     */
+    static fromHex(hex) {
+        const match = hex.match(/#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i);
+        if (!match) return null;
 
-function update_score(){
-    const try_elem = document.getElementById('try');
-    try_elem.innerHTML = "Try: " + try_num;
-
-    const score_elem = document.getElementById('score');
-    score_elem.innerHTML = "Score: " + score_num;
-}
-
-function submit(r, g, b) {
-    if (!enable_submit) return;
-
-    const col = [r, g, b];
-    const col_hex = ConvertRGBtoHex(col);
-    try_num++;
-
-    if (col_hex == ac_color_hex) {
-        time = update_timer();
-        enable_submit = false;
-        update_score();
-        document.getElementById('modal_ac').style.visibility ="visible";
-        
-        const time_text = Math.floor(time/1000) + "." + ("00"+time%1000).slice(-3);
-        document.getElementById('ac_scores').innerHTML = 
-            "Score: " + score_num + "<br>" +
-            "Time: " + time_text + "<br>" +
-            "Try: " + try_num;
-
-        let comment = "";
-        let comment2 = "";
-        if (color_step != 1) {
-            comment = "| チュートリアルを完了しました！"
-            comment2 = "チュートリアル終了！"
-        } else if(try_num == 1) {
-            comment = "| 一発で白を見つけられました！"
-            comment2 = "一発で白を見つけられた！"
-        } else if(time <= 10000) {
-            comment = "| 素早くで白を見つけられました！"
-            comment2 = "素早く白を見つけられた！"
-        }
-
-        document.getElementById('tw_share').setAttribute('href',
-            "http://twitter.com/share?url=" + encodeURI(location.href) +
-            "&hashtags=white_200&related=TumoiYorozu" +
-            "&text="+encodeURI("200色の白から見つけよう！ White 200 "+comment+"\n得点:" + score_num + " 時間:" + time_text + "秒 クリック回数:" + try_num)
-        );
-        
-        document.getElementById('ac_comment').innerHTML = comment2;
-
-    } else {
-        const dif = ((ac_color[0]-r)**2 + (ac_color[1]-g)**2 + (ac_color[2]-b)**2) / color_step**2;
-        score_num -= dif;
-        update_score();
-
-        const hazure = document.getElementById('modal_hazure');
-        hazure.classList.add("hazure_anim")
-        hazure.addEventListener('animationend', function() {
-            hazure.classList.remove("hazure_anim")
+        return new Color({
+            r: parseInt(match[1], 16),
+            g: parseInt(match[2], 16),
+            b: parseInt(match[3], 16),
         });
-        const hazure_text = document.getElementById('hazure_text');
-        hazure_text.innerHTML="#" + col_hex + "<br>はずれ (-" + dif + ")";
+    }
+
+    /**
+     * @param {Record<'r'|'g'|'b', number>} param0 object with r, g, b numbers
+     */
+    constructor({ r, g, b }) {
+        this.r = r % 0x100;
+        this.g = g % 0x100;
+        this.b = b % 0x100;
+    }
+
+    toString() {
+        return this.toHex();
+    }
+
+    /**
+     * @returns {string} hex color code starting with #
+     */
+    toHex() {
+        return `#${Color.paddedHex(this.r)}${Color.paddedHex(this.g)}${Color.paddedHex(this.b)}`;
+    }
+
+    /**
+     * compares this and other color for equality
+     * @param {Color?} other color to compare to
+     * @returns {boolean} true if colors are equal
+     */
+    eq(other) {
+        return !!other && this.r === other.r && this.g === other.g && this.b === other.b;
+    }
+
+    /**
+     * compares this and other color and calculates distance between them
+     * (-1 if other color is null)
+     * @param {Color?} other 
+     * @returns {number} squared distance between this and other color
+     */
+    diff(other) {
+        return other ? Math.pow(this.r - other.r, 2) + Math.pow(this.g - other.g, 2) + Math.pow(this.b - other.b, 2) : -1;
+    }
+
+    /**
+     * creates new color with given difference from this color
+     * @param {Record<'r'|'g'|'b', number>} param0 object with r, g, b diffs
+     * @returns {Color} new color
+     */
+    withDiff({ r, g, b }) {
+        return new Color({
+            r: this.r + r,
+            g: this.g + g,
+            b: this.b + b,
+        });
     }
 }
-function update_timer(){
-    if (!enable_submit) return;
 
-    let now_time = new Date();
-    let diff = now_time.getTime() - start_time.getTime();
+const state = {
+    /**
+     * color to be guessed. if null, the game is not initiated
+     * @type {Color?}
+     */
+    acColor: null,
 
-    const time_elem = document.getElementById('time');
-    time_elem.innerHTML = "Time<br>" + 
-        Math.floor(diff/1000) + "." + 
-        ("0"+Math.floor(diff/10)%100).slice(-2);
-    setTimeout(update_timer, 30);
-    return diff;
+    /**
+     * try counts in this game
+     * @type {number}
+     */
+    tryCount: 0,
+
+    /**
+     * score in this game
+     * @type {number}
+     */
+    score: 0,
+
+    /**
+     * true if game is under processing submission; the game should be locked when true
+     * @type {boolean}
+     */
+    readyForSubmission: false,
+
+    /**
+     * the started time of current game; if null, the game is not started
+     * @type {Date?}
+     */
+    startTime: null,
+
+    /**
+     * @type {number}
+     */
+    colorStep: 0,
 }
 
-function make_problem(num, dif){
-    const start_btn = document.getElementById('start_btn');
-    if (start_btn != null) start_btn.remove();
+let enable_submit = 0;
 
-    color_step = dif;
-    const alt = document.getElementById('list');
-    const target_col = [255, 255, 255];
-    alt.innerHTML="";
+/**
+ * reflects score state to the UI
+ */
+function updateScore(){
+    const tryEl = /** @type {HTMLParagraphElement} */ (document.getElementById('try'));
+    tryEl.innerText = `Try: ${state.tryCount}`;
+
+    const scoreEl = /** @type {HTMLParagraphElement} */ (document.getElementById('score'));
+    scoreEl.innerText = `Score: ${state.score}`;
+}
+
+/**
+ * submit and tries to guess the color
+ * @param {`#${string}`} hex hex color code starting with #
+ * @returns 
+ */
+function submit(hex) {
+    if (!state.readyForSubmission) return;
+
+    const color = Color.fromHex(hex);
+    if (!color) return;
+    
+    state.tryCount++;
+
+    if (color.eq(state.acColor)) {
+        const time = updateTimer();
+        state.readyForSubmission = false;
+        updateScore();
+        const modalElement = /** @type {HTMLDivElement} */ (document.getElementById('modal_ac'));
+        modalElement.style.visibility ="visible";
+        
+        const scoresElement = /** @type {HTMLDivElement} */ (document.getElementById('ac_scores'));
+        scoresElement.innerHTML = `\
+Score: ${state.score}<br>
+Time: ${time.toFixed(3)}<br>
+Try: ${state.tryCount}<br>`
+
+        const [comment1, comment2] = state.colorStep !== 1 ? [
+            "| チュートリアルを完了しました！",
+            "チュートリアル終了！",
+        ] : state.tryCount === 1 ? [
+            "| 一発で白を見つけられました！",
+            "一発で白を見つけられた！",
+        ] : time <= 10000 ? [
+            "| 素早くで白を見つけられました！",
+            "素早く白を見つけられた！",
+        ] : ["", ""];
+
+        const shareElement = /** @type {HTMLAnchorElement} */ (document.getElementById('tw_share'));
+        shareElement.setAttribute('href',
+            `http://twitter.com/share?url=${encodeURI(location.href)}&hashtags=white_200&related=TumoiYorozu&text=${
+                encodeURI(`200色の白から見つけよう！ White 200 ${comment1}\n得点:${state.score} 時間:${time.toFixed(3)}秒 クリック回数:${state.tryCount}`)
+            }`
+        );
+
+        const commentElement = /** @type {HTMLParagraphElement} */ (document.getElementById('ac_comment'));
+        commentElement.innerText = comment2;
+
+    } else {
+        const diff = color.diff(state.acColor) / state.colorStep**2;
+        state.score -= diff;
+        updateScore();
+
+        const modalElement = /** @type {HTMLDivElement} */ (document.getElementById('modal_hazure'));
+        modalElement.classList.add("hazure_anim")
+        modalElement.addEventListener('animationend', () => {
+            modalElement.classList.remove("hazure_anim")
+        });
+        const textElement = /** @type {HTMLParagraphElement} */ (document.getElementById('hazure_text'));
+        textElement.innerHTML=`#${color}<br>はずれ (-${diff})`;
+    }
+}
+
+/**
+ * updates the timer and returns elapsed time
+ * (-1 if `state.isSubmitting` or the game is not started)
+ * @returns {number} elapsed time in milliseconds
+ */
+function updateTimer(){
+    if (!state.readyForSubmission || !state.startTime) return -1;
+
+    let elapsed = new Date().getTime() - state.startTime.getTime();
+
+    const timeElement = /** @type {HTMLParagraphElement} */ (document.getElementById('time'));
+    timeElement.innerHTML = `Time<br> ${(elapsed/1000).toFixed(2)}`;
+    setTimeout(updateTimer, 30);
+
+    return elapsed;
+}
+
+/**
+ * 
+ * @param {number} num number of whites
+ * @param {num} dif initial state.colorStep
+ */
+function make_problem(num, dif){
+    const startButtonElement = document.getElementById('start_btn');
+    if (startButtonElement != null) startButtonElement.remove();
+
+    state.colorStep = dif;
+    const alt = /** @type {HTMLDivElement} */ (document.getElementById('list'));
+    const targetColor = /** @type {Color} */ (Color.fromHex('#FFFFFF'));
+    alt.innerHTML = "";
+
     let list = [];
     for(let r = 0; r <= 5; ++r){
         for(let g = 0; g <= 5; ++g){
             for(let b = 0; b <= 5; ++b){
-                list.push([target_col[0]-r*dif, target_col[1]-g*dif, target_col[2]-b*dif]);
+                list.push(targetColor.withDiff({ r, g, b }));
             }
         }
     }
+
     list = shuffle(list);
-    let html = "";
-    for(let i = 0; i < num; ++i) {
-        let col_hex = ConvertRGBtoHex(list[i]);
-        html += '<div'+
-            ' class="alternatives"'+
-            ' id=col_' + col_hex +
-            ' onclick=submit(' + list[i][0]+","+list[i][1]+","+list[i][2] + ')'+
-            ' style="background-color:#'+ col_hex +
-            '"></div>\n';
-            // '">#' + col_hex + '</div>\n';
-    }
-    alt.innerHTML=html;
-    ac_color = list[Math.floor(Math.random() * num)];
-    ac_color_hex = ConvertRGBtoHex(ac_color);
-    const problem_text = document.getElementById('problem_text');
-    problem_text.innerHTML = "この白を探せ！<br>#" + ac_color_hex;
-    const problem_color_box = document.getElementById('problem_color_box');
-    problem_color_box.style.setProperty('background-color', "#" + ac_color_hex);
+    
+    alt.innerHTML = list.map((c) => 
+        `<div class="alternatives" id="col_${c.toHex().slice(1)}" onclick="submit('${c}')" style="background-color: ${c}"></div>`
+    ).slice(0, num).join("");
+
+    state.acColor = list[Math.floor(Math.random() * num)];
+
+    const textElement = /** @type {HTMLParagraphElement} */ (document.getElementById('problem_text'));
+    textElement.innerHTML = `この白を探せ！<br>${targetColor}`
+
+    const colorBoxElement = /** @type {HTMLDivElement} */ (document.getElementById('problem_color_box'));
+    colorBoxElement.style.setProperty('background-color', targetColor.toHex());
 
     
-    document.getElementById('modal_ac').style.visibility ="hidden";
+    const modalElement = /** @type {HTMLDivElement} */ (document.getElementById('modal_ac'));
+    modalElement.style.visibility ="hidden";
 
-    score_num = (dif == 1) ? 1000 : 100;
-    try_num = 0;
-    update_score();
+    state.score = (dif == 1) ? 1000 : 100;
+    state.tryCount = 0;
+    state.startTime = new Date();
+    state.readyForSubmission = true;
 
-    start_time = new Date();
-    enable_submit = true;
-    update_timer();
+    updateScore();
+    updateTimer()
 }
 
 window.onload = function(){
