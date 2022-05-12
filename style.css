@@ -52,7 +52,7 @@ main {
     height:40px;
     margin: 2px;
     border: solid;
-    border-width: 1px;
+    border-width: 2px;
     border-color: #aeaeaeae;
     border-radius: 8px;
     text-align:center;
@@ -65,7 +65,7 @@ main {
     float: left;
     margin: 2px;
     border: solid;
-    border-width: 1px;
+    border-width: 2px;
     border-color: #aeaeaeae;
     border-radius: 8px;
 }
