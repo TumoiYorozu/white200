@@ -1,153 +1,428 @@
-
+/**
+ * shuffles given array non-destructively
+ * @template T
+ * @param {T[]} param0 array to shuffle; not to be mutated
+ * @returns {T[]} shuffled array
+ */
 const shuffle = ([...array]) => {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-}
+};
 
-function ColorToHex(color) {
-    var hexadecimal = color.toString(16);
-    return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
-}
-function ConvertRGBtoHex(col) {
-    return ColorToHex(col[0]) + ColorToHex(col[1]) + ColorToHex(col[2]);
-}
+class Color {
+    /**
+     * converts number to 2-digit hex. if number is less than 0 or greater than 255, uses mod 256
+     * @param {number} n number to convert to hex
+     * @returns {string} 2-digit hex
+     */
+    static paddedHex(n) {
+        return (n % 0x100).toString(16).padStart(2, "0");
+    }
 
-let ac_color = [-1, -1, -1];
-let ac_color_hex = "";
-let color_step = 0;
-let start_time;
-let try_num   = 0;
-let score_num = 0;
-let enable_submit = 0;
+    /**
+     * creates new color from the hex code; if hex is not valid, returns null
+     * @param {`#${string}`} hex hex color code starting with #
+     * @returns {Color?}
+     */
+    static fromHex(hex) {
+        const match = hex.match(/#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i);
+        if (!match) return null;
 
-function update_score(){
-    const try_elem = document.getElementById('try');
-    try_elem.innerHTML = "Try: " + try_num;
-
-    const score_elem = document.getElementById('score');
-    score_elem.innerHTML = "Score: " + score_num;
-}
-
-function submit(r, g, b) {
-    if (!enable_submit) return;
-
-    const col = [r, g, b];
-    const col_hex = ConvertRGBtoHex(col);
-    try_num++;
-
-    if (col_hex == ac_color_hex) {
-        time = update_timer();
-        enable_submit = false;
-        update_score();
-        document.getElementById('modal_ac').style.visibility ="visible";
-        
-        const time_text = Math.floor(time/1000) + "." + ("00"+time%1000).slice(-3);
-        document.getElementById('ac_scores').innerHTML = 
-            "Score: " + score_num + "<br>" +
-            "Time: " + time_text + "<br>" +
-            "Try: " + try_num;
-
-        let comment = "";
-        let comment2 = "";
-        if (color_step != 1) {
-            comment = "| チュートリアルを完了しました！"
-            comment2 = "チュートリアル終了！"
-        } else if(try_num == 1) {
-            comment = "| 一発で白を見つけられました！"
-            comment2 = "一発で白を見つけられた！"
-        } else if(time <= 10000) {
-            comment = "| 素早くで白を見つけられました！"
-            comment2 = "素早く白を見つけられた！"
-        }
-
-        document.getElementById('tw_share').setAttribute('href',
-            "http://twitter.com/share?url=" + encodeURI(location.href) +
-            "&hashtags=white_200&related=TumoiYorozu" +
-            "&text="+encodeURI("200色の白から見つけよう！ White 200 "+comment+"\n得点:" + score_num + " 時間:" + time_text + "秒 クリック回数:" + try_num)
+        return new Color(
+            parseInt(match[1], 16),
+            parseInt(match[2], 16),
+            parseInt(match[3], 16)
         );
-        
-        document.getElementById('ac_comment').innerHTML = comment2;
+    }
 
-    } else {
-        const dif = ((ac_color[0]-r)**2 + (ac_color[1]-g)**2 + (ac_color[2]-b)**2) / color_step**2;
-        score_num -= dif;
-        update_score();
+    /**
+     * @param {number} r red component
+     * @param {number} g green component
+     * @param {number} b blue component
+     */
+    constructor(r, g, b) {
+        this.r = r % 0x100;
+        this.g = g % 0x100;
+        this.b = b % 0x100;
+    }
 
-        const hazure = document.getElementById('modal_hazure');
-        hazure.classList.add("hazure_anim")
-        hazure.addEventListener('animationend', function() {
-            hazure.classList.remove("hazure_anim")
-        });
-        const hazure_text = document.getElementById('hazure_text');
-        hazure_text.innerHTML="#" + col_hex + "<br>はずれ (-" + dif + ")";
+    /**
+     * returns hex color code string; invoked with template literal
+     * @returns {string} hex color code
+     */
+    toString() {
+        return `#${Color.paddedHex(this.r)}${Color.paddedHex(
+            this.g
+        )}${Color.paddedHex(this.b)}`;
+    }
+
+    /**
+     * compares this and other color for equality
+     * @param {Color?} other color to compare to
+     * @returns {boolean} true if colors are equal
+     */
+    eq(other) {
+        return (
+            !!other &&
+            this.r === other.r &&
+            this.g === other.g &&
+            this.b === other.b
+        );
+    }
+
+    /**
+     * compares this and other color and calculates distance between them
+     * (-1 if other color is null)
+     * @param {Color?} other
+     * @returns {number} squared distance between this and other color
+     */
+    diff(other) {
+        return other
+            ? Math.pow(this.r - other.r, 2) +
+                  Math.pow(this.g - other.g, 2) +
+                  Math.pow(this.b - other.b, 2)
+            : -1;
+    }
+
+    /**
+     * creates new color with given difference from this color
+     * @param {number} r difference in red component
+     * @param {number} g difference in green component
+     * @param {number} b difference in blue component
+     * @param {number} [multiplier=1] multiplier for each component
+     * @returns {Color} new color
+     */
+    cloneWithDiff(r, g, b, multiplier = 1) {
+        return new Color(
+            this.r - r * multiplier,
+            this.g - g * multiplier,
+            this.b - b * multiplier
+        );
     }
 }
-function update_timer(){
-    if (!enable_submit) return;
 
-    let now_time = new Date();
-    let diff = now_time.getTime() - start_time.getTime();
+class Game {
+    /**
+     * creates new game
+     * @param {number} num number of whites
+     * @param {number} difficulty difficulty of the game; 1 is hard, 3 is easy
+     */
+    constructor(num, difficulty) {
+        /**
+         * score in the game
+         * @type {number}
+         */
+        this.score = difficulty == 1 ? 1000 : 100;
 
-    const time_elem = document.getElementById('time');
-    time_elem.innerHTML = "Time<br>" + 
-        Math.floor(diff/1000) + "." + 
-        ("0"+Math.floor(diff/10)%100).slice(-2);
-    setTimeout(update_timer, 30);
-    return diff;
-}
+        /**
+         * try counts in the game
+         * @type {number}
+         */
+        this.tryCount = 0;
 
-function make_problem(num, dif){
-    const start_btn = document.getElementById('start_btn');
-    if (start_btn != null) start_btn.remove();
+        /**
+         * the time the game started; null if not started yet
+         * @type {Date?}
+         */
+        this.startTime = null;
 
-    color_step = dif;
-    const alt = document.getElementById('list');
-    const target_col = [255, 255, 255];
-    alt.innerHTML="";
-    let list = [];
-    for(let r = 0; r <= 5; ++r){
-        for(let g = 0; g <= 5; ++g){
-            for(let b = 0; b <= 5; ++b){
-                list.push([target_col[0]-r*dif, target_col[1]-g*dif, target_col[2]-b*dif]);
+        /**
+         * @type {number}
+         */
+        this.colorStep = difficulty;
+
+        const white = new Color(255, 255, 255);
+
+        /** @type {Color[]} */
+        const colors = [];
+        for (let r = 0; r <= 5; ++r) {
+            for (let g = 0; g <= 5; ++g) {
+                for (let b = 0; b <= 5; ++b) {
+                    colors.push(white.cloneWithDiff(r, g, b, difficulty));
+                }
             }
         }
+
+        /**
+         * color list of this game
+         * @type {Color[]}
+         */
+        this.colors = shuffle(colors).slice(0, num);
+
+        /**
+         * the color to be guessed
+         * @type {Color}
+         */
+        this.answer =
+            this.colors[Math.floor(Math.random() * this.colors.length)];
     }
-    list = shuffle(list);
-    let html = "";
-    for(let i = 0; i < num; ++i) {
-        let col_hex = ConvertRGBtoHex(list[i]);
-        html += '<div'+
-            ' class="alternatives"'+
-            ' id=col_' + col_hex +
-            ' onclick=submit(' + list[i][0]+","+list[i][1]+","+list[i][2] + ')'+
-            ' style="background-color:#'+ col_hex +
-            '"></div>\n';
-            // '">#' + col_hex + '</div>\n';
+
+    start() {
+        this.startTime = new Date();
+        View.removeStartButton();
+        View.hideSuccess();
+        View.showPalette(this);
+        View.showTarget({ color: this.answer });
+        View.updateScore(this);
+        View.updateTimer({ startTime: this.startTime });
     }
-    alt.innerHTML=html;
-    ac_color = list[Math.floor(Math.random() * num)];
-    ac_color_hex = ConvertRGBtoHex(ac_color);
-    const problem_text = document.getElementById('problem_text');
-    problem_text.innerHTML = "この白を探せ！<br>#" + ac_color_hex;
-    const problem_color_box = document.getElementById('problem_color_box');
-    problem_color_box.style.setProperty('background-color', "#" + ac_color_hex);
 
-    
-    document.getElementById('modal_ac').style.visibility ="hidden";
+    /**
+     * handles user's try
+     * @param {`#${string}`} hex color code starting with #
+     * @returns {boolean | null} true if success
+     */
+    onTry(hex) {
+        if (this.startTime === null) return null;
+        const color = Color.fromHex(hex);
+        if (!color) return null;
 
-    score_num = (dif == 1) ? 1000 : 100;
-    try_num = 0;
-    update_score();
+        ++this.tryCount;
 
-    start_time = new Date();
-    enable_submit = true;
-    update_timer();
+        const isSuccess = this.answer.eq(color);
+        if (isSuccess) {
+            this.onSuccess();
+        } else {
+            this.onFailure(color);
+        }
+
+        return isSuccess;
+    }
+
+    /**
+     * handles user's try when success
+     * @this {Game & { startTime: Date }}
+     */
+    onSuccess() {
+        const elapsed = new Date().getTime() - this.startTime.getTime();
+        View.updateScore(this);
+
+        const [commentShared, commentShown] =
+            this.colorStep !== 1
+                ? ["| チュートリアルを完了しました！", "チュートリアル終了！"]
+                : this.tryCount === 1
+                ? ["| 一発で白を見つけられました！", "一発で白を見つけられた！"]
+                : elapsed <= 10000
+                ? ["| 素早く白を見つけられました！", "素早く白を見つけられた！"]
+                : ["", ""];
+
+        View.showSuccess({
+            ...this,
+            elapsed,
+            commentShared,
+            commentShown,
+        });
+    }
+
+    /**
+     * handles user's try when failure
+     * @this {Game & { startTime: Date }}
+     * @param {Color} color the selected color
+     */
+    onFailure(color) {
+        const diff = Math.floor(color.diff(this.answer) / this.colorStep ** 2);
+        this.score -= diff;
+
+        View.updateScore(this);
+        View.showFailure({ color: color.toString(), diff });
+    }
 }
 
-window.onload = function(){
-    // make_problem(200, 2);
-    // make_problem(3, 2);
+/**
+ * the game. if null, game is not started
+ * @type {Game?}
+ */
+let game = null;
+
+var View = {
+    /**
+     * removes start button
+     */
+    removeStartButton() {
+        const startButtonElement = document.getElementById("start_btn");
+        if (startButtonElement != null) startButtonElement.remove();
+    },
+
+    /**
+     * shows color palette
+     * @param {object} props
+     * @param {Color[]} props.colors
+     */
+    showPalette(props) {
+        const alt = /** @type {HTMLDivElement} */ (
+            document.getElementById("list")
+        );
+        alt.innerHTML = props.colors
+            .map(
+                (c) =>
+                    `<div class="alternatives" id="col_${c
+                        .toString()
+                        .slice(
+                            1
+                        )}" onclick="submit('${c}')" style="background-color: ${c}"></div>`
+            )
+            .join("\n");
+    },
+
+    /**
+     * shows the target color
+     * @param {object} props
+     * @param {Color} props.color
+     */
+    showTarget(props) {
+        const textElement = /** @type {HTMLParagraphElement} */ (
+            document.getElementById("problem_text")
+        );
+        textElement.innerHTML = `この白を探せ！<br>${props.color}`;
+
+        const colorBoxElement = /** @type {HTMLDivElement} */ (
+            document.getElementById("problem_color_box")
+        );
+        colorBoxElement.style.setProperty(
+            "background-color",
+            props.color.toString()
+        );
+    },
+
+    /**
+     * hides success modal
+     */
+    hideSuccess() {
+        const modalElement = /** @type {HTMLDivElement} */ (
+            document.getElementById("modal_ac")
+        );
+        modalElement.style.visibility = "hidden";
+    },
+
+    /**
+     * reflects score state to the UI
+     * @param {object} props
+     * @param {number} props.score the score
+     * @param {number} props.tryCount the try count
+     */
+    updateScore(props) {
+        const tryEl = /** @type {HTMLParagraphElement} */ (
+            document.getElementById("try")
+        );
+        tryEl.innerText = `Try: ${props.tryCount}`;
+
+        const scoreEl = /** @type {HTMLParagraphElement} */ (
+            document.getElementById("score")
+        );
+        scoreEl.innerText = `Score: ${props.score}`;
+    },
+
+    /**
+     * updates the timer and returns elapsed time
+     * @param {object} props
+     * @param {Date} props.startTime elapsed time in milliseconds
+     */
+    updateTimer(props) {
+        const elapsed = new Date().getTime() - props.startTime.getTime();
+        const timeElement = /** @type {HTMLParagraphElement} */ (
+            document.getElementById("time")
+        );
+        timeElement.innerHTML = `Time<br> ${(elapsed / 1000).toFixed(3)}`;
+        setTimeout(() => {
+            View.updateTimer(props);
+        }, 30);
+    },
+
+    /**
+     * shows failure modal
+     * @param {object} props
+     * @param {string} props.color the selected color in hex
+     * @param {number} props.diff the difference between the selected color and the answer
+     */
+    showFailure(props) {
+        const modalElement = /** @type {HTMLDivElement} */ (
+            document.getElementById("modal_hazure")
+        );
+        modalElement.classList.add("hazure_anim");
+        modalElement.addEventListener("animationend", () => {
+            modalElement.classList.remove("hazure_anim");
+        });
+        const textElement = /** @type {HTMLParagraphElement} */ (
+            document.getElementById("hazure_text")
+        );
+        textElement.innerHTML = `${
+            props.color
+        }<br>はずれ (-${props.diff})`;
+    },
+
+    /**
+     * shows success modal
+     * @param {object} props
+     * @param {number} props.score the score
+     * @param {number} props.elapsed elapsed time in milliseconds
+     * @param {number} props.tryCount the try count
+     * @param {string} props.commentShown comment to be shown
+     * @param {string} props.commentShared comment to be shared
+     */
+    showSuccess(props) {
+        const modalElement = /** @type {HTMLDivElement} */ (
+            document.getElementById("modal_ac")
+        );
+        modalElement.style.visibility = "visible";
+
+        const scoresElement = /** @type {HTMLDivElement} */ (
+            document.getElementById("ac_scores")
+        );
+        scoresElement.innerHTML = `\
+Score: ${props.score}<br>
+Time: ${(props.elapsed / 1000).toFixed(3)}<br>
+Try: ${props.tryCount}<br>`;
+
+        const commentElement = /** @type {HTMLParagraphElement} */ (
+            document.getElementById("ac_comment")
+        );
+        commentElement.innerText = props.commentShown;
+
+        const shareElement = /** @type {HTMLAnchorElement} */ (
+            document.getElementById("tw_share")
+        );
+        shareElement.setAttribute(
+            "href",
+            `http://twitter.com/share?url=${encodeURI(
+                location.href
+            )}&hashtags=white_200&related=TumoiYorozu&text=${encodeURI(
+                `200色の白から見つけよう！ White 200 ${
+                    props.commentShared
+                }\n得点:${props.score} 時間:${props.elapsed.toFixed(
+                    3
+                )}秒 クリック回数:${props.tryCount}`
+            )}`
+        );
+    },
+};
+
+/**
+ * submit and tries to guess the color
+ * @param {`#${string}`} hex hex color code starting with #
+ */
+function submit(hex) {
+    if (!game) return;
+    switch (game.onTry(hex)) {
+        case true:
+            game = null;
+            return;
+        case false:
+            return;
+        case null:
+            start(200, 3);
+            return;
+    }
+}
+
+/**
+ * starts the game
+ * @param {number} num number of whites
+ * @param {num} dif initial state.colorStep
+ */
+function start(num, dif) {
+    game = new Game(num, dif);
+    game.start();
 }
