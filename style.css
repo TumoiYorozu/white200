@@ -94,7 +94,7 @@ main {
 }
 
 .hazure_anim {
-    animation: key1 0.9s ease alternate;
+    animation: key1 3s ease alternate;
     animation-fill-mode: forwards;
 }
 
@@ -102,10 +102,10 @@ main {
     0% {
       transform: translate(-50%, -60%);
     }
-    40% {
+    10% {
       transform: translate(-50%, 70%);
     }
-    60% {
+    90% {
       transform: translate(-50%, 70%);
     }
     100% {
