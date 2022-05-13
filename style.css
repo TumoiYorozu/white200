@@ -94,8 +94,12 @@ main {
 }
 
 .hazure_anim {
-    animation: key1 3s ease alternate;
+    animation: key1 4s ease alternate;
     animation-fill-mode: forwards;
+}
+
+.hazure_neutral {
+    transform: translate(-50%, -60%);
 }
 
 @keyframes key1 {

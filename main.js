@@ -77,9 +77,14 @@ function submit(r, g, b) {
         update_score();
 
         const hazure = document.getElementById('modal_hazure');
-        hazure.classList.add("hazure_anim")
-        hazure.addEventListener('animationend', function() {
-            hazure.classList.remove("hazure_anim")
+        hazure.classList.remove("hazure_anim")
+        window.requestAnimationFrame(function(time) {
+            window.requestAnimationFrame(function(time) {
+                hazure.classList.add("hazure_anim")
+                hazure.addEventListener('animationend', function() {
+                    hazure.classList.remove("hazure_anim")
+                });
+            });
         });
         const hazure_text = document.getElementById('hazure_text');
         hazure_text.innerHTML="#" + col_hex + "<br>はずれ (-" + dif + ")";
