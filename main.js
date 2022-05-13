@@ -223,7 +223,7 @@ class Game {
      * @param {Color} color the selected color
      */
     onFailure(color) {
-        const diff = color.diff(this.answer) / this.colorStep ** 2;
+        const diff = Math.floor(color.diff(this.answer) / this.colorStep ** 2);
         this.score -= diff;
 
         View.updateScore(this);
@@ -312,7 +312,7 @@ var View = {
         const scoreEl = /** @type {HTMLParagraphElement} */ (
             document.getElementById("score")
         );
-        scoreEl.innerText = `Score: ${props.score.toFixed(2)}`;
+        scoreEl.innerText = `Score: ${props.score}`;
     },
 
     /**
@@ -325,7 +325,7 @@ var View = {
         const timeElement = /** @type {HTMLParagraphElement} */ (
             document.getElementById("time")
         );
-        timeElement.innerHTML = `Time<br> ${(elapsed / 1000).toFixed(2)}`;
+        timeElement.innerHTML = `Time<br> ${(elapsed / 1000).toFixed(3)}`;
         setTimeout(() => {
             View.updateTimer(props);
         }, 30);
@@ -350,7 +350,7 @@ var View = {
         );
         textElement.innerHTML = `${
             props.color
-        }<br>はずれ (-${props.diff.toFixed(2)})`;
+        }<br>はずれ (-${props.diff})`;
     },
 
     /**
