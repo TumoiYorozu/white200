@@ -64,7 +64,7 @@ main {
 }
 
 .alternatives{
-    width: 75px;
+    width: min(75px, calc(20% - 8px));
     height: 50px;
     float: left;
     margin: 2px;
