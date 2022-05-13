@@ -173,3 +173,12 @@ main {
 @media screen and (max-width: 500px){
     .none {display:none}
 }
+
+.copy_right {
+    height:      13px;
+    font-size:   13px;
+    line-height: 13px;
+    text-align: right;
+    margin-top:  70px;
+    margin-right: 100px;
+}
