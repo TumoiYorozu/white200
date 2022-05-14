@@ -23,6 +23,7 @@ let try_num   = 0;
 let score_num = 0;
 let enable_submit = 0;
 let score_history5 = ["---", "---", "---", "---", "---"];
+let miss_cnt = {};
 
 function update_score(){
     const try_elem = document.getElementById('try');
@@ -95,6 +96,14 @@ function submit(r, g, b) {
         document.getElementById('ac_comment').innerHTML = comment2;
 
     } else {
+        let miss_txt = "   ";
+        if (miss_cnt[col_hex] == null) {
+            miss_cnt[col_hex] = 1;
+        } else {
+            miss_cnt[col_hex]++;
+            miss_txt = " <span style='font-size:80%;'>[" + miss_cnt[col_hex] + "]</span>";
+        }
+
         const dif = ((ac_color[0]-r)**2 + (ac_color[1]-g)**2 + (ac_color[2]-b)**2) / color_step**2;
         score_num -= dif;
         update_score();
@@ -113,7 +122,7 @@ function submit(r, g, b) {
             });
         });
         const hazure_text = document.getElementById('hazure_text');
-        hazure_text.innerHTML="#" + col_hex + "<br>はずれ (-" + dif + ")";
+        hazure_text.innerHTML="#" + col_hex + miss_txt + "<br>はずれ (-" + dif + ")";
     }
 }
 function update_timer(){
@@ -168,6 +177,8 @@ function make_problem(num, dif){
 
     
     document.getElementById('modal_ac').style.visibility ="hidden";
+
+    miss_cnt = {};
 
     score_num = (dif == 1) ? 1000 : 100;
     try_num = 0;
