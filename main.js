@@ -22,6 +22,7 @@ let start_time;
 let try_num   = 0;
 let score_num = 0;
 let enable_submit = 0;
+let score_history5 = ["---", "---", "---", "---", "---"];
 
 function update_score(){
     const try_elem = document.getElementById('try');
@@ -57,15 +58,34 @@ function submit(r, g, b) {
             comment2 = "チュートリアル終了！"
         } else if(try_num == 1) {
             comment = "| 一発で白を見つけられました！"
-            comment2 = "一発で白を見つけられた！"
+            comment2 = "一発で見つけられた！"
         } else if(time <= 10000) {
-            comment = "| 素早くで白を見つけられました！"
-            comment2 = "素早く白を見つけられた！"
+            comment = "| 素早く白を見つけられました！"
+            comment2 = "素早く見つけられた！"
         } else if(try_num <= 10) {
             comment = "| 10回以内に白を見つけられました！"
-            comment2 = "10回以内に見つけられた！"
+            comment2 = "10回以内に見つけた！"
         }
 
+        let ave_message = "";
+        if (color_step == 1) {
+            score_history5.shift();
+            score_history5.push(score_num);
+            let ave = 0;
+            for (const v of score_history5) {
+                if (v == "---") {
+                    ave = "---";
+                    break;
+                }
+                ave += v;
+            }
+            if (ave != "---") {
+                ave /= 5;
+                comment = "| 最近5回の平均スコア: " + ave + " " + comment;
+            }
+            ave_message = "最近5回の平均スコア:" + ave + "<br>(" + score_history5.join(', ') + ")"
+        }
+        document.getElementById('ac_ave').innerHTML = ave_message;
         document.getElementById('tw_share').setAttribute('href',
             "http://twitter.com/share?url=" + encodeURI(location.href) +
             "&hashtags=white_200&related=TumoiYorozu" +

@@ -125,7 +125,7 @@ main {
 
 #modal_ac {
     width: 400px;
-    height: 400px;
+    height: 500px;
     float: left;
     font-size: 200%;
     margin: 2px;
@@ -148,6 +148,10 @@ main {
 
 .ac_text {
     font-size: 100%;
+    line-height:100%;
+}
+.ac_ave_text {
+    font-size: 75%;
     line-height:100%;
 }
 
@@ -183,5 +187,5 @@ main {
     line-height: 13px;
     text-align: right;
     margin-top:  70px;
-    margin-right: 100px;
+    margin-right: 190px;
 }
