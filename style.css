@@ -61,6 +61,10 @@ main {
     border-radius: 8px;
     text-align:center;
     line-height:30px;
+
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .alternatives{
@@ -76,6 +80,33 @@ main {
 
 .opened {
     background-image: linear-gradient(to left top, #ffffff00 49%, #ddd 50%, #ffffff00 51%);
+}
+
+.description_bottom {
+    display: none;
+    position: absolute;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.6em;
+    color: #fff;
+    border-radius: 5px;
+    background: #000;
+    width: 100px;
+}
+.description_bottom:before {
+    content: "";
+    position: absolute;
+    top: -24px;
+    right: 60%;
+    border: 15px solid transparent;
+    border-top: 15px solid #000;
+    margin-left: -15px;
+    transform: rotateZ(180deg);
+}
+#problem_color_box:hover .description_bottom{
+    display: inline-block;
+    top: 50px;
+    left: 0px;
 }
 
 #modal_hazure{
@@ -193,3 +224,6 @@ main {
     margin-top:  70px;
     margin-right: 190px;
 }
+
+
+
