@@ -63,7 +63,7 @@ function submit(r, g, b) {
             comment2 = "素早く白を見つけられた！"
         } else if(try_num <= 10) {
             comment = "| 10回以内に白を見つけられました！"
-            comment2 = "10回以内に白を見つけられた！"
+            comment2 = "10回以内に見つけられた！"
         }
 
         document.getElementById('tw_share').setAttribute('href',
