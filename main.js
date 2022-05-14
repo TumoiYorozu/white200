@@ -99,7 +99,9 @@ function submit(r, g, b) {
         score_num -= dif;
         update_score();
 
-        document.getElementById('col_'+col_hex).classList.add("opened");
+        // document.getElementById('col_'+col_hex).classList.add("opened");
+        document.getElementById('col_'+col_hex).style.backgroundImage = "linear-gradient(to left top, #ffffff00 45%, #" + ac_color_hex + " 50%, #ffffff00 55%)";
+
         const hazure = document.getElementById('modal_hazure');
         hazure.classList.remove("hazure_anim")
         window.requestAnimationFrame(function(time) {
@@ -177,6 +179,6 @@ function make_problem(num, dif){
 }
 
 window.onload = function(){
-    // make_problem(200, 2);
+    make_problem(200, 2);
     // make_problem(3, 2);
 }
