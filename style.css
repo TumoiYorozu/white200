@@ -56,7 +56,7 @@ main {
     height:40px;
     margin: 2px;
     border: solid;
-    border-width: 2px;
+    border-width: 1px;
     border-color: #aeaeaeae;
     border-radius: 8px;
     text-align:center;
@@ -64,12 +64,12 @@ main {
 }
 
 .alternatives{
-    width: min(75px, calc(20% - 8px));
-    height: 50px;
+    width: min(60px, calc(16.66666% - 5px));
+    height: 40px;
     float: left;
-    margin: 2px;
+    margin: 1.5px;
     border: solid;
-    border-width: 2px;
+    border-width: 1px;
     border-color: #aeaeaeae;
     border-radius: 8px;
 }
