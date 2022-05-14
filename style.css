@@ -170,8 +170,11 @@ main {
     color: #fff;
 }
 
-@media screen and (max-width: 500px){
+@media screen and (max-width: 560px){
     .none {display:none}
+    header {
+        padding: 8px 0px;
+    }
 }
 
 .copy_right {
