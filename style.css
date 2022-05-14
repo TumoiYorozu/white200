@@ -74,6 +74,10 @@ main {
     border-radius: 8px;
 }
 
+.opened {
+    background-image: linear-gradient(to left top, #ffffff00 49%, #ddd 50%, #ffffff00 51%);
+}
+
 #modal_hazure{
     width: 120px;
     height: 50px;

@@ -99,6 +99,7 @@ function submit(r, g, b) {
         score_num -= dif;
         update_score();
 
+        document.getElementById('col_'+col_hex).classList.add("opened");
         const hazure = document.getElementById('modal_hazure');
         hazure.classList.remove("hazure_anim")
         window.requestAnimationFrame(function(time) {
