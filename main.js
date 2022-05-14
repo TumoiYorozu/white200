@@ -100,7 +100,7 @@ function submit(r, g, b) {
         update_score();
 
         // document.getElementById('col_'+col_hex).classList.add("opened");
-        document.getElementById('col_'+col_hex).style.backgroundImage = "linear-gradient(to left top, #ffffff00 45%, #" + ac_color_hex + " 50%, #ffffff00 55%)";
+        document.getElementById('col_'+col_hex).style.backgroundImage = "linear-gradient(to left top, #ffffff00 45%, #" + ac_color_hex + " 46%, #" + ac_color_hex + " 54%, #ffffff00 55%)";
 
         const hazure = document.getElementById('modal_hazure');
         hazure.classList.remove("hazure_anim")
