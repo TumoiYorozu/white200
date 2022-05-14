@@ -179,6 +179,6 @@ function make_problem(num, dif){
 }
 
 window.onload = function(){
-    make_problem(200, 2);
+    // make_problem(200, 2);
     // make_problem(3, 2);
 }
