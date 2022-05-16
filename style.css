@@ -210,6 +210,10 @@ main {
     color: #fff;
 }
 
+.fa-facebook-square {
+    color: #1877f2;
+}
+
 @media screen and (max-width: 560px){
     .none {display:none}
     header {
