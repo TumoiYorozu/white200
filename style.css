@@ -226,5 +226,6 @@ main {
     margin-right: 190px;
 }
 
-
-
+.lang_display_none {
+    display: none;
+}

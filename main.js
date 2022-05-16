@@ -24,6 +24,7 @@ let score_num = 0;
 let enable_submit = 0;
 let score_history5 = ["---", "---", "---", "---", "---"];
 let miss_cnt = {};
+const isJapanese = ((navigator.browserLanguage || navigator.language || navigator.userLanguage).substr(0,2) === 'ja');
 
 function update_score(){
     const try_elem = document.getElementById('try');
@@ -55,17 +56,37 @@ function submit(r, g, b) {
         let comment = "";
         let comment2 = "";
         if (color_step != 1) {
-            comment = "| チュートリアルを完了しました！"
-            comment2 = "チュートリアル終了！"
+            if (isJapanese) {
+                comment = "| チュートリアルを完了しました！"
+                comment2 = "チュートリアル終了！"
+            } else {
+                comment = "| Tutorial Completed!"
+                comment2 = "Tutorial Completed!"
+            }
         } else if(try_num == 1) {
-            comment = "| 一発で白を見つけられました！"
-            comment2 = "一発で見つけられた！"
+            if (isJapanese) {
+                comment = "| 一発で白を見つけられました！"
+                comment2 = "一発で見つけられた！"
+            } else {
+                comment = "| Found white in once!"
+                comment2 = "Found white in once!"
+            }
         } else if(time <= 10000) {
-            comment = "| 素早く白を見つけられました！"
-            comment2 = "素早く見つけられた！"
+            if (isJapanese) {
+                comment = "| 素早く白を見つけられました！"
+                comment2 = "素早く見つけられた！"
+            } else {
+                comment = "| Found white fast!"
+                comment2 = "Found white fast!"
+            }
         } else if(try_num <= 10) {
-            comment = "| 10回以内に白を見つけられました！"
-            comment2 = "10回以内に見つけた！"
+            if (isJapanese) {
+                comment = "| 10回以内に白を見つけられました！"
+                comment2 = "10回以内に見つけた！"
+            } else {
+                comment = "| Found white within 10 times!"
+                comment2 = "Found white within 10!"
+            }
         }
 
         let ave_message = "";
@@ -82,15 +103,26 @@ function submit(r, g, b) {
             }
             if (ave != "---") {
                 ave /= 5;
-                comment = "| 最近5回の平均スコア: " + ave + " " + comment;
+                if (isJapanese) {
+                    comment = "| 最近5回の平均スコア: " + ave + " " + comment;
+                } else {
+                    comment = "| Average score of the last 5: " + ave + " " + comment;
+                }
             }
-            ave_message = "最近5回の平均スコア:" + ave + "<br>(" + score_history5.join(', ') + ")"
+            if (isJapanese) {
+                ave_message = "最近5回の平均スコア:" + ave + "<br>(" + score_history5.join(', ') + ")"
+            } else {
+                ave_message = "Average score of last 5:" + ave + "<br>(" + score_history5.join(', ') + ")"
+            }
         }
         document.getElementById('ac_ave').innerHTML = ave_message;
         document.getElementById('tw_share').setAttribute('href',
             "http://twitter.com/share?url=" + encodeURI(location.href) +
             "&hashtags=white_200&related=TumoiYorozu" +
-            "&text="+encodeURI("200色の白から見つけよう！ White 200 "+comment+"\n得点:" + score_num + " 時間:" + time_text + "秒 クリック回数:" + try_num)
+            (isJapanese
+                ? "&text="+encodeURI("200色の白から見つけよう！ White 200 "+comment+"\n得点:" + score_num + "、時間:" + time_text + "秒、クリック回数:" + try_num)
+                : "&text="+encodeURI("Find it among 200 colors of white! | White 200 "+comment+"\nScore:" + score_num + ", Time:" + time_text + "sec, Try:" + try_num)
+            )
         );
         
         document.getElementById('ac_comment').innerHTML = comment2;
@@ -189,7 +221,22 @@ function make_problem(num, dif){
     update_timer();
 }
 
+function change_lang(){
+    if (isJapanese) {
+        for(const elems of document.querySelectorAll(".en")) {
+            elems.className = "lang_display_none";
+        }
+    } else {
+        for(const elems of document.querySelectorAll(".ja")) {
+            elems.className = "lang_display_none";
+        }
+    }
+}
+
+
 window.onload = function(){
+    change_lang();
+
     // make_problem(200, 2);
     // make_problem(3, 2);
 }
