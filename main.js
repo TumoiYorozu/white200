@@ -121,7 +121,7 @@ function submit(r, g, b) {
             "&hashtags=white_200&related=TumoiYorozu" +
             (isJapanese
                 ? "&text="+encodeURI("200色の白から見つけよう！ White 200 "+comment+"\n得点:" + score_num + "、時間:" + time_text + "秒、クリック回数:" + try_num)
-                : "&text="+encodeURI("Find it among 200 colors of white! | White 200 "+comment+"\nScore:" + score_num + ", Time:" + time_text + "sec, Try:" + try_num)
+                : "&text="+encodeURI("Find WHITE among 200 colors of white! | White 200 "+comment+"\nScore:" + score_num + ", Time:" + time_text + "sec, Try:" + try_num)
             )
         );
         
