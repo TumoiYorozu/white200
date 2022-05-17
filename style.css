@@ -228,6 +228,9 @@ main {
     text-align: right;
     margin-top:  70px;
     margin-right: 190px;
+    position: absolute;
+    top: 95%;
+    margin: 0px 50px;
 }
 
 .lang_display_none {
