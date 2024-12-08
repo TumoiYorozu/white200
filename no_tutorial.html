@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <script type="text/javascript" src="main.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LB5YRRK6MX"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-LB5YRRK6MX'); </script>
+    <title>200色の白から見つけよう！ - White 200</title>
+</head>
+<body>
+    <header>
+        <div id="problem" class="none" style="width: 90px;">
+            <p id="p1" class="text_cat">White 200</p>
+        </div>
+        <div id="problem_text" style="width: 135px;">
+            <p id="p1" class="text_cat">この白を探せ！<br>#xxxxxx</p>
+        </div>
+        <div id="problem_color_box" style="width: 80px;">
+            <div class="description_bottom">
+                <p>この色を、下の200色の白から選んでください！</p>
+                <p>お手つきすると、正解との差に応じてスコアが減ります。</p>
+                <p>外したマスには、正解色の斜線が付きます。</p>
+                <p>2回同じお手つきすると、はずれ表示の [ ]内の数で教えてくれます。</p>
+            </div>
+        </div>
+
+        <div style="width:calc(100% - 610px);"></div>
+
+        <div style="width: 90px; float: right">
+            <p class="point_time_text" id="time" style="text-align:center">Time<br>00.00</p>
+        </div>
+        <div style="width: 120px; float: right">
+            <p class="point_time_text" id="score">Score:0</p>
+            <p class="point_time_text" id="try">Try: 0</p>
+        </div>
+
+        <div class="none" style="width: 80px; height: 100%; float: right">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false" data-hashtags="white_200" data-related="TumoiYorozu">Tweet</a>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+
+        <div id="modal_hazure">
+            <p id="hazure_text">はずれ<br>#xxxxxx</p>
+        </div>
+        <div id="start_btn" class="start_btn" onclick="make_problem(200, 1)">
+        <!-- <div id="start_btn" class="start_btn" onclick="make_problem(3, 3)"> -->
+            <span class="ja">スタート！</span>
+            <span class="en">Start!</span>
+        </div>
+        <div id="modal_ac">
+            <p class="ac_text">
+                <span class="ja">正解！</span>
+                <span class="en">Congratulations!</span>
+            </p>
+            <p class="ac_text" id="ac_scores">Score:0<br>Try:0<br>Time:0</p>
+            <p class="ac_text" id="ac_tweet" style="font-size: 70%">
+                <a id="tw_share" href="http://twitter.com/share" target="_blank" onClick="window.open(encodeURI(decodeURI(this.href)), 'tweetwindow', 'width=650, height=470, personalbar=0, toolbar=0, scrollbars=1, sizable=1'); return false;">
+                    <span class="ja">結果をツイート</span>
+                    <span class="en">Tweet the results!</span>
+                </a>
+                <a class="fab fa-facebook-square" href="https://www.facebook.com/share.php?u=https%3A%2F%2Ftumoiyorozu.github.io%2Fwhite200" target="_blank">
+                </a>
+            </p>
+            <p class="ac_text" id="ac_comment">チュートリアル終了！</p>
+            <p class="ac_ave_text" id="ac_ave">最近5回の平均スコア:---<br>(---, ---, ---, ---, ---)</p>
+            <div class="start_btn" onclick="make_problem(200, 1)" style="font-size: 100%; height: 50px; line-height:50px; top: 85%">
+                <span class="ja">本番開始！</span>
+                <span class="en">Start Real!</span>
+            </div>
+            <div class="copy_right">
+                <a href="https://github.com/TumoiYorozu/white200" target="_blank">
+                    Code
+                </a>
+                &nbsp;
+                <a href="http://twitter.com/TumoiYorozu" target="_blank">
+                    ©TumoiYorozu
+                </a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="list">
+        </div>
+    </main>
+</body>
+</html>
